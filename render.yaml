@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: prudential-backend
+    runtime: docker
+    plan: starter
+    branch: main
+    healthCheckPath: /admin/
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        sync: false
+      - key: DJANGO_SETTINGS_MODULE
+        value: config.settings
+      - key: PYTHON_VERSION
+        value: 3.11.0
