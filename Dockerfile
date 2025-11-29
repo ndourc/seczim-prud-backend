@@ -27,14 +27,25 @@ RUN pip install --upgrade pip && \
 # Copy project files
 COPY . .
 
-# Create directories for static files and database
+# Create directories for static files
 RUN mkdir -p staticfiles media
 
 # Collect static files
-RUN python manage.py collectstatic --noinput || true
+RUN python manage.py collectstatic --noinput || echo "Static files collection failed, continuing..."
 
 # Expose port
 EXPOSE 8000
 
-# Run gunicorn
-CMD gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-8000} --workers 3
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/admin/').read()" || exit 1
+
+# Run with environment variable PORT
+CMD gunicorn config.wsgi:application \
+    --bind 0.0.0.0:${PORT:-8000} \
+    --workers 2 \
+    --threads 4 \
+    --timeout 120 \
+    --access-logfile - \
+    --error-logfile - \
+    --log-level debug
