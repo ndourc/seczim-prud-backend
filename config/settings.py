@@ -14,9 +14,9 @@ sys.path.insert(0, str(BASE_DIR / "apps"))
 SECRET_KEY = 'django-insecure-=t@!my--1g01_j&4vukik2_e*c+-zwx&y^bzoqf-#+)hr7at=5'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
 
 # CORS settings
 CORS_ALLOW_ALL_ORIGINS = True  # Only for development
