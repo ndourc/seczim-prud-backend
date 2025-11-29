@@ -1,0 +1,930 @@
+{
+    "info": {
+        "_postman_id": "prudential-prbs-api-collection",
+        "name": "PRBS - Prudential Regulatory Banking System API",
+        "description": "Comprehensive API collection for the PRBS backend",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Authentication",
+            "item": [
+                {
+                    "name": "User Registration",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"username\":\"testuser\",\"email\":\"test@example.com\",\"password\":\"testpass123\",\"confirm_password\":\"testpass123\",\"first_name\":\"Test\",\"last_name\":\"User\",\"role\":\"PRINCIPAL_OFFICER\"}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/auth/register/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "auth",
+                                "register",
+                                ""
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "User Login",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"username\":\"testuser\",\"password\":\"testpass123\"}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/auth/login/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "auth",
+                                "login",
+                                ""
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Current User",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/auth/me/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "auth",
+                                "me",
+                                ""
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "User Dashboard",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/auth/dashboard/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "auth",
+                                "dashboard",
+                                ""
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Change Password",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"old_password\":\"testpass123\",\"new_password\":\"newpass123\",\"confirm_password\":\"newpass123\"}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/auth/change-password/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "auth",
+                                "change-password",
+                                ""
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Logout",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/auth/logout/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "auth",
+                                "logout",
+                                ""
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Core SMI Management",
+            "item": [
+                {
+                    "name": "List All SMIs",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/core/smis/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "core",
+                                "smis",
+                                ""
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Create New SMI",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"company_name\":\"Test Financial Services Ltd\",\"license_number\":\"LIC001\",\"business_type\":\"Investment Management\",\"address\":\"123 Financial District, Capital City\",\"phone\":\"+1234567890\",\"email\":\"info@testfinancial.com\",\"website\":\"https://testfinancial.com\",\"status\":\"ACTIVE\",\"license_issue_date\":\"2023-01-15\",\"license_expiry_date\":\"2028-01-15\",\"regulatory_authority\":\"Financial Services Authority\",\"capital_requirement\":1000000.00,\"paid_up_capital\":1200000.00}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/core/smis/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "core",
+                                "smis",
+                                ""
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get SMI Details",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/core/smis/{{smi_id}}/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "core",
+                                "smis",
+                                "{{smi_id}}",
+                                ""
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "SMI Dashboard",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/core/smis/dashboard/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "core",
+                                "smis",
+                                "dashboard",
+                                ""
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Add Board Member",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"smi_id\":\"{{smi_id}}\",\"name\":\"John Doe\",\"position\":\"Chairman\",\"appointment_date\":\"2023-01-15\",\"qualifications\":\"MBA, CFA\",\"experience_years\":15,\"is_independent\":true}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/core/board-members/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "core",
+                                "board-members",
+                                ""
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Risk Assessment",
+            "item": [
+                {
+                    "name": "List Risk Assessments",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/risk-assessment/risk-assessments/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "risk-assessment",
+                                "risk-assessments",
+                                ""
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Risk Assessment",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"smi_id\":\"{{smi_id}}\",\"assessment_date\":\"2024-01-15\",\"assessment_period\":\"QUARTERLY\",\"fsi_score\":75.5,\"inherent_risk_score\":60.0,\"operational_risk_score\":70.0,\"market_risk_score\":65.0,\"credit_risk_score\":55.0,\"car\":18.5,\"liquidity_ratio\":1.8,\"leverage_ratio\":2.5,\"notes\":\"Initial quarterly risk assessment for Q1 2024\"}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/risk-assessment/risk-assessments/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "risk-assessment",
+                                "risk-assessments",
+                                ""
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Risk Assessment Dashboard",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/risk-assessment/dashboard/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "risk-assessment",
+                                "dashboard",
+                                ""
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Stress Test",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"smi_id\":\"{{smi_id}}\",\"test_type\":\"SMI_LEVEL\",\"scenario_name\":\"Economic Downturn Scenario\",\"scenario_description\":\"Simulation of 20% market decline and increased default rates\",\"capital_adequacy_impact\":-3.5,\"liquidity_impact\":-2.0,\"profitability_impact\":-15.0,\"risk_score_change\":8.5,\"passed\":true,\"threshold_breach\":false,\"recommendations\":\"Maintain current capital buffers and monitor liquidity ratios closely\"}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/risk-assessment/stress-tests/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "risk-assessment",
+                                "stress-tests",
+                                ""
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Case Management",
+            "item": [
+                {
+                    "name": "List All Cases",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/case-management/cases/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "case-management",
+                                "cases",
+                                ""
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Create New Case",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"smi_id\":\"{{smi_id}}\",\"case_type\":\"INVESTIGATION\",\"title\":\"Compliance Investigation - Q1 2024\",\"description\":\"Investigation into potential compliance violations identified during routine audit\",\"complainant\":\"Internal Audit Team\",\"priority\":\"HIGH\",\"due_date\":\"2024-02-15\",\"progress_notes\":\"Initial case opened, awaiting assignment to investigator\"}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/case-management/cases/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "case-management",
+                                "cases",
+                                ""
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Case Management Dashboard",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/case-management/dashboard/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "case-management",
+                                "dashboard",
+                                ""
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Add Case Note",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"case_id\":\"{{case_id}}\",\"note\":\"Investigation team assigned. Initial interviews scheduled for next week. Evidence collection process initiated.\"}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/case-management/case-notes/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "case-management",
+                                "case-notes",
+                                ""
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Compliance",
+            "item": [
+                {
+                    "name": "List Compliance Indices",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/compliance/compliance-indices/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "compliance",
+                                "compliance-indices",
+                                ""
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Compliance Index",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"smi_id\":\"{{smi_id}}\",\"period\":\"2024-01-15\",\"analysis_period\":\"QUARTERLY\",\"overall_compliance_score\":82.5,\"regulatory_compliance\":85.0,\"operational_compliance\":80.0,\"financial_compliance\":82.5,\"risk_calibration_score\":78.0,\"risk_adjustment_factor\":1.05,\"post_inspection_adjustment\":2.5}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/compliance/compliance-indices/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "compliance",
+                                "compliance-indices",
+                                ""
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Compliance Dashboard",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/compliance/dashboard/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "compliance",
+                                "dashboard",
+                                ""
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Compliance Assessment",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"smi_id\":\"{{smi_id}}\",\"assessment_date\":\"2024-01-15\",\"assessment_type\":\"REGULAR\",\"scope\":\"Q1 2024 Compliance Review\",\"methodology\":\"Document review, interviews, and sample testing\",\"risk_areas\":{\"CDD\":\"Customer Due Diligence\",\"record_keeping\":\"Record Keeping\",\"reporting\":\"Regulatory Reporting\"},\"findings\":\"Overall compliance is satisfactory with minor areas for improvement\",\"compliance_gaps\":\"Training records need updating, some reporting delays identified\",\"risk_rating\":\"MEDIUM\",\"recommendations\":\"Implement automated training tracking and improve reporting processes\",\"action_items\":[\"Update training records\",\"Streamline reporting process\",\"Conduct staff training\"],\"priority_actions\":\"Address training record updates within 30 days\"}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/compliance/compliance-assessments/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "compliance",
+                                "compliance-assessments",
+                                ""
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "VA/VASP Analysis",
+            "item": [
+                {
+                    "name": "List VA/VASP Analyses",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/va-vasp/va-vasp/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "va-vasp",
+                                "va-vasp",
+                                ""
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Create VA/VASP Analysis",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"smi_id\":\"{{smi_id}}\",\"analysis_date\":\"2024-01-15\",\"is_va_issuer\":true,\"is_vasp\":false,\"va_types\":\"Security tokens, Utility tokens\",\"va_risk_score\":65.0,\"vasp_risk_score\":0.0,\"overall_va_risk_score\":65.0,\"securities_exposure\":25.5,\"regulatory_compliance\":78.0,\"risk_profile\":\"Medium risk profile with focus on security token offerings\",\"recommendations\":\"Enhance KYC/AML procedures for token holders, implement robust custody solutions\"}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/va-vasp/va-vasp/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "va-vasp",
+                                "va-vasp",
+                                ""
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "VA/VASP Dashboard",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/va-vasp/dashboard/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "va-vasp",
+                                "dashboard",
+                                ""
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Licensing",
+            "item": [
+                {
+                    "name": "List Licensing Portal Integrations",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/licensing/licensing-portal-integrations/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "licensing",
+                                "licensing-portal-integrations",
+                                ""
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Institutional Profile",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"smi_id\":\"{{smi_id}}\",\"profile_type\":\"COMPLETE\",\"last_updated\":\"2024-01-15\",\"data_source\":\"LICENSING_PORTAL\",\"verification_status\":\"VERIFIED\",\"profile_data\":{\"business_activities\":[\"Investment Management\",\"Portfolio Advisory\"],\"target_markets\":[\"Retail\",\"Institutional\"],\"geographic_coverage\":[\"Local\",\"Regional\"]}}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/licensing/institutional-profiles/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "licensing",
+                                "institutional-profiles",
+                                ""
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Add Shareholder",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"smi_id\":\"{{smi_id}}\",\"shareholder_name\":\"ABC Holdings Ltd\",\"shareholder_type\":\"CORPORATE\",\"ownership_percentage\":45.5,\"shares_held\":455000,\"voting_rights\":true,\"appointment_date\":\"2023-01-15\",\"nationality\":\"Local\",\"regulatory_approval\":true}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/licensing/shareholders/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "licensing",
+                                "shareholders",
+                                ""
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Returns Module",
+            "item": [
+                {
+                    "name": "List Prudential Returns",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/returns/prudential-returns/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "returns",
+                                "prudential-returns",
+                                ""
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Prudential Return",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"smi_id\":\"{{smi_id}}\",\"return_period\":\"2024-01-15\",\"return_type\":\"QUARTERLY\",\"submission_date\":\"2024-01-20\",\"status\":\"SUBMITTED\",\"total_assets\":50000000.00,\"total_liabilities\":35000000.00,\"net_capital\":15000000.00,\"regulatory_capital\":12000000.00,\"capital_adequacy_ratio\":18.5,\"liquidity_ratio\":1.8,\"leverage_ratio\":2.2}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/returns/prudential-returns/",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "returns",
+                                "prudential-returns",
+                                ""
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://localhost:8000",
+            "type": "string"
+        },
+        {
+            "key": "auth_token",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "smi_id",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "case_id",
+            "value": "",
+            "type": "string"
+        }
+    ]
+}

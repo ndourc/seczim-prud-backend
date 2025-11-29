@@ -1,0 +1,45 @@
+{
+  "info": {
+    "_postman_id": "prbs-frontend-collection",
+    "name": "PRBS Frontend Smoke",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8000" },
+    { "key": "auth_token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Risk Assessment",
+      "item": [
+        { "name": "Industry Ranking", "request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/api/risk-assessment/assessments/industry_ranking/", "host": ["{{base_url}}"], "path": ["api","risk-assessment","assessments","industry_ranking",""] } } },
+        { "name": "Dashboard Summary", "request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/api/risk-assessment/assessments/dashboard_summary/", "host": ["{{base_url}}"], "path": ["api","risk-assessment","assessments","dashboard_summary",""] } } }
+      ]
+    },
+    {
+      "name": "Licensing",
+      "item": [
+        { "name": "Portal Data", "request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/api/licensing/portal-data/", "host": ["{{base_url}}"], "path": ["api","licensing","portal-data",""] } } }
+      ]
+    },
+    {
+      "name": "Compliance",
+      "item": [
+        { "name": "Compliance Indices", "request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/api/compliance/indices/", "host": ["{{base_url}}"], "path": ["api","compliance","indices",""] } } }
+      ]
+    },
+    {
+      "name": "Cases",
+      "item": [
+        { "name": "Cases", "request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/api/case-management/cases/", "host": ["{{base_url}}"], "path": ["api","case-management","cases",""] } } }
+      ]
+    },
+    {
+      "name": "Alerts",
+      "item": [
+        { "name": "Risk Alerts", "request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/api/risk-assessment/indicators/alerts/", "host": ["{{base_url}}"], "path": ["api","risk-assessment","indicators","alerts",""] } } }
+      ]
+    }
+  ]
+}
+

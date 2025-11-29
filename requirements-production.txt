@@ -1,0 +1,55 @@
+# Core Django
+Django==5.2.3
+djangorestframework==3.14.0
+djangorestframework-simplejwt==5.3.1
+django-cors-headers==4.6.0
+django-filter==25.1
+django-crispy-forms==2.3
+crispy-bootstrap5==2024.10
+
+# Authentication
+djoser==2.2.3
+PyJWT==2.9.0
+python3-openid==3.2.0
+social-auth-app-django==5.4.2
+social-auth-core==4.5.4
+
+# API Documentation
+drf-yasg==1.21.10
+
+# Database
+psycopg2-binary==2.9.10
+
+# Security & Crypto
+cryptography==44.0.0
+oauthlib==3.2.2
+requests-oauthlib==2.0.0
+
+# HTTP & Networking
+requests==2.32.3
+urllib3==2.3.0
+certifi==2024.12.14
+idna==3.10
+
+# Data Processing
+pandas==2.2.2
+numpy==1.26.4
+openpyxl==3.1.5
+XlsxWriter==3.2.0
+
+# Utilities
+python-dateutil==2.9.0.post0
+pytz==2024.2
+PyYAML==6.0.2
+python-pptx==1.0.2
+
+# Template & Email
+django-templated-mail==1.1.1
+defusedxml==0.8.0rc2
+
+# ASGI
+asgiref==3.8.1
+
+# Production Server
+gunicorn==23.0.0
+whitenoise==6.8.2
