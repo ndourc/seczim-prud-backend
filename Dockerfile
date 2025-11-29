@@ -42,7 +42,7 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
 
 # Run with environment variable PORT
 CMD gunicorn config.wsgi:application \
-    --bind 0.0.0.0:${PORT:-8080} \
+    --bind 0.0.0.0:8080 \
     --workers 2 \
     --threads 4 \
     --timeout 120 \
