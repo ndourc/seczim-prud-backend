@@ -207,7 +207,10 @@ class NotificationViewSet(viewsets.ModelViewSet):
     ordering = ['-created_at']
 
     def get_queryset(self):
-        """Users can only see their own notifications"""
+        # Short-circuit for Swagger schema generation
+        if getattr(self, 'swagger_fake_view', False):
+            return Notification.objects.none()
+        
         return Notification.objects.filter(user=self.request.user)
 
     @action(detail=True, methods=['post'])

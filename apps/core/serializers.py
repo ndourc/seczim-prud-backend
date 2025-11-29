@@ -98,6 +98,7 @@ class NotificationSerializer(serializers.ModelSerializer):
 
 class SystemAuditLogSerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField(read_only=True)
+    ip_address = serializers.CharField(max_length=45)
     
     class Meta:
         model = SystemAuditLog

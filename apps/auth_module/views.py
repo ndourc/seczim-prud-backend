@@ -296,8 +296,10 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        if self.request.user.is_staff:
-            return self.queryset
+        # Short-circuit for Swagger schema generation
+        if getattr(self, 'swagger_fake_view', False):
+            return self.queryset.none()
+        
         return self.queryset.filter(user=self.request.user)
 
     def get_permissions(self):
