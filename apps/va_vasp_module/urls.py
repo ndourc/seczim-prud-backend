@@ -6,7 +6,7 @@ from .views import (
 )
 
 router = DefaultRouter()
-router.register(r'analyses', VA_VASPViewSet)
+router.register(r'va-vasp', VA_VASPViewSet, basename='va-vasp')
 router.register(r'virtual-assets', VirtualAssetViewSet)
 router.register(r'vasp-services', VASPServiceViewSet)
 router.register(r'risk-assessments', VARiskAssessmentViewSet)

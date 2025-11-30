@@ -123,6 +123,9 @@ class InstitutionalProfile(models.Model):
     def __str__(self):
         return f"Institutional Profile - {self.smi.company_name}"
 
+    class Meta:
+        ordering = ['-created_at']
+
 class Shareholder(models.Model):
     """Shareholder information for SMIs"""
     SHAREHOLDER_TYPES = [

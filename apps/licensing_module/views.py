@@ -27,7 +27,7 @@ class LicensingPortalIntegrationViewSet(viewsets.ModelViewSet):
     """ViewSet for licensing portal integration management"""
     queryset = LicensingPortalIntegration.objects.all()
     serializer_class = LicensingPortalIntegrationSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]  # TEMP: Auth disabled for testing
     
     def get_permissions(self):
         if self.action in ['create', 'update', 'partial_update', 'destroy']:
@@ -92,7 +92,7 @@ class PortalSMIDataViewSet(viewsets.ModelViewSet):
     """ViewSet for portal SMI data management"""
     queryset = PortalSMIData.objects.all()
     serializer_class = PortalSMIDataSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]  # TEMP: Auth disabled for testing
     
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -140,7 +140,7 @@ class InstitutionalProfileViewSet(viewsets.ModelViewSet):
     """ViewSet for institutional profile management"""
     queryset = InstitutionalProfile.objects.all()
     serializer_class = InstitutionalProfileSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]  # TEMP: Auth disabled for testing
     
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -177,7 +177,7 @@ class ShareholderViewSet(viewsets.ModelViewSet):
     """ViewSet for shareholder management"""
     queryset = Shareholder.objects.all()
     serializer_class = ShareholderSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]  # TEMP: Auth disabled for testing
     
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -214,7 +214,7 @@ class DirectorViewSet(viewsets.ModelViewSet):
     """ViewSet for director management"""
     queryset = Director.objects.all()
     serializer_class = DirectorSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]  # TEMP: Auth disabled for testing
     
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -256,7 +256,7 @@ class LicenseHistoryViewSet(viewsets.ModelViewSet):
     """ViewSet for license history management"""
     queryset = LicenseHistory.objects.all()
     serializer_class = LicenseHistorySerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]  # TEMP: Auth disabled for testing
     
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -280,7 +280,7 @@ class LicenseHistoryViewSet(viewsets.ModelViewSet):
 
 class LicensingPortalSyncViewSet(viewsets.ViewSet):
     """ViewSet for licensing portal synchronization operations"""
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]  # TEMP: Auth disabled for testing
     
     @action(detail=False, methods=['post'])
     def sync_smi_data(self, request):

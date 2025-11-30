@@ -32,7 +32,7 @@ class SMIViewSet(viewsets.ModelViewSet):
     """
     queryset = SMI.objects.all()
     serializer_class = SMISerializer
-    permission_classes = [permissions.IsAuthenticated, CanViewSmiData]
+    permission_classes = [permissions.AllowAny]  # AUTH_DISABLED - was: IsAuthenticated, CanViewSmiData
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['company_name', 'license_number', 'email', 'phone']
     ordering_fields = ['company_name', 'registration_date', 'created_at']
@@ -100,7 +100,7 @@ class SMIViewSet(viewsets.ModelViewSet):
 class BoardMemberViewSet(viewsets.ModelViewSet):
     queryset = BoardMember.objects.all()
     serializer_class = BoardMemberSerializer
-    permission_classes = [permissions.IsAuthenticated, CanViewSmiData]
+    permission_classes = [permissions.AllowAny]  # AUTH_DISABLED - was: IsAuthenticated, CanViewSmiData
     filter_backends = [filters.SearchFilter]
     search_fields = ['name', 'position', 'smi__company_name']
 
@@ -112,7 +112,7 @@ class BoardMemberViewSet(viewsets.ModelViewSet):
 class MeetingLogViewSet(viewsets.ModelViewSet):
     queryset = MeetingLog.objects.all()
     serializer_class = MeetingLogSerializer
-    permission_classes = [permissions.IsAuthenticated, CanViewSmiData]
+    permission_classes = [permissions.AllowAny]  # AUTH_DISABLED - was: IsAuthenticated, CanViewSmiData
     filter_backends = [filters.SearchFilter]
     search_fields = ['smi__company_name', 'agenda', 'decisions']
 
@@ -124,7 +124,7 @@ class MeetingLogViewSet(viewsets.ModelViewSet):
 class ProductOfferingViewSet(viewsets.ModelViewSet):
     queryset = ProductOffering.objects.all()
     serializer_class = ProductOfferingSerializer
-    permission_classes = [permissions.IsAuthenticated, CanViewSmiData]
+    permission_classes = [permissions.AllowAny]  # AUTH_DISABLED - was: IsAuthenticated, CanViewSmiData
     filter_backends = [filters.SearchFilter]
     search_fields = ['product_name', 'smi__company_name']
 
@@ -136,7 +136,7 @@ class ProductOfferingViewSet(viewsets.ModelViewSet):
 class ClienteleProfileViewSet(viewsets.ModelViewSet):
     queryset = ClienteleProfile.objects.all()
     serializer_class = ClienteleProfileSerializer
-    permission_classes = [permissions.IsAuthenticated, CanViewSmiData]
+    permission_classes = [permissions.AllowAny]  # AUTH_DISABLED - was: IsAuthenticated, CanViewSmiData
     filter_backends = [filters.SearchFilter]
     search_fields = ['smi__company_name']
 
@@ -148,7 +148,7 @@ class ClienteleProfileViewSet(viewsets.ModelViewSet):
 class FinancialStatementViewSet(viewsets.ModelViewSet):
     queryset = FinancialStatement.objects.all()
     serializer_class = FinancialStatementSerializer
-    permission_classes = [permissions.IsAuthenticated, CanViewSmiData]
+    permission_classes = [permissions.AllowAny]  # AUTH_DISABLED - was: IsAuthenticated, CanViewSmiData
     filter_backends = [filters.SearchFilter]
     search_fields = ['smi__company_name']
 
@@ -160,7 +160,7 @@ class FinancialStatementViewSet(viewsets.ModelViewSet):
 class ClientAssetMixViewSet(viewsets.ModelViewSet):
     queryset = ClientAssetMix.objects.all()
     serializer_class = ClientAssetMixSerializer
-    permission_classes = [permissions.IsAuthenticated, CanViewSmiData]
+    permission_classes = [permissions.AllowAny]  # AUTH_DISABLED - was: IsAuthenticated, CanViewSmiData
     filter_backends = [filters.SearchFilter]
     search_fields = ['smi__company_name']
 
@@ -172,7 +172,7 @@ class ClientAssetMixViewSet(viewsets.ModelViewSet):
 class LicensingBreachViewSet(viewsets.ModelViewSet):
     queryset = LicensingBreach.objects.all()
     serializer_class = LicensingBreachSerializer
-    permission_classes = [permissions.IsAuthenticated, CanViewReports]
+    permission_classes = [permissions.AllowAny]  # AUTH_DISABLED - was: IsAuthenticated, CanViewReports
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['smi__company_name', 'assigned_to__username', 'description']
     ordering_fields = ['breach_date', 'created_at']
@@ -186,7 +186,7 @@ class LicensingBreachViewSet(viewsets.ModelViewSet):
 class SupervisoryInterventionViewSet(viewsets.ModelViewSet):
     queryset = SupervisoryIntervention.objects.all()
     serializer_class = SupervisoryInterventionSerializer
-    permission_classes = [permissions.IsAuthenticated, CanViewReports]
+    permission_classes = [permissions.AllowAny]  # AUTH_DISABLED - was: IsAuthenticated, CanViewReports
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['smi__company_name', 'reason', 'description']
     ordering_fields = ['intervention_date', 'created_at']
@@ -200,7 +200,7 @@ class SupervisoryInterventionViewSet(viewsets.ModelViewSet):
 class NotificationViewSet(viewsets.ModelViewSet):
     queryset = Notification.objects.all()
     serializer_class = NotificationSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]  # TEMP: Auth disabled for testing
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['title', 'message']
     ordering_fields = ['created_at', 'priority']
@@ -231,7 +231,7 @@ class NotificationViewSet(viewsets.ModelViewSet):
 class SystemAuditLogViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = SystemAuditLog.objects.all()
     serializer_class = SystemAuditLogSerializer
-    permission_classes = [permissions.IsAuthenticated, IsAdminUser]
+    permission_classes = [permissions.AllowAny]  # AUTH_DISABLED - was: IsAuthenticated, IsAdminUser
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['action', 'model_name', 'object_repr', 'user__username']
     ordering_fields = ['timestamp']

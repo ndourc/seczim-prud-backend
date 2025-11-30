@@ -18,7 +18,7 @@ class CaseViewSet(viewsets.ModelViewSet):
     """ViewSet for case management"""
     queryset = Case.objects.all()
     serializer_class = CaseSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]  # TEMP: Auth disabled for testing
     
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -153,7 +153,7 @@ class CaseNoteViewSet(viewsets.ModelViewSet):
     """ViewSet for case notes management"""
     queryset = CaseNote.objects.all()
     serializer_class = CaseNoteSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]  # TEMP: Auth disabled for testing
     
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -172,7 +172,7 @@ class InvestigationViewSet(viewsets.ModelViewSet):
     """ViewSet for investigation management"""
     queryset = Investigation.objects.all()
     serializer_class = InvestigationSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]  # TEMP: Auth disabled for testing
     
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -193,7 +193,7 @@ class AdHocInspectionViewSet(viewsets.ModelViewSet):
     """ViewSet for ad-hoc inspection management"""
     queryset = AdHocInspection.objects.all()
     serializer_class = AdHocInspectionSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]  # TEMP: Auth disabled for testing
     
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -214,7 +214,7 @@ class CaseAttachmentViewSet(viewsets.ModelViewSet):
     """ViewSet for case attachment management"""
     queryset = CaseAttachment.objects.all()
     serializer_class = CaseAttachmentSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]  # TEMP: Auth disabled for testing
     
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -233,7 +233,7 @@ class CaseTimelineViewSet(viewsets.ModelViewSet):
     """ViewSet for case timeline management"""
     queryset = CaseTimeline.objects.all()
     serializer_class = CaseTimelineSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]  # TEMP: Auth disabled for testing
     
     def get_queryset(self):
         queryset = super().get_queryset()

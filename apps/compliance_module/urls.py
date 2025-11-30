@@ -6,7 +6,7 @@ from .views import (
 )
 
 router = DefaultRouter()
-router.register(r'compliance-indices', ComplianceIndexViewSet)
+router.register(r'compliance-index', ComplianceIndexViewSet, basename='compliance-index')
 router.register(r'assessments', ComplianceAssessmentViewSet)
 router.register(r'requirements', ComplianceRequirementViewSet)
 router.register(r'violations', ComplianceViolationViewSet)

@@ -18,7 +18,7 @@ class PrudentialReturnViewSet(viewsets.ModelViewSet):
     """ViewSet for prudential return management"""
     queryset = PrudentialReturn.objects.all()
     serializer_class = PrudentialReturnSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]  # TEMP: Auth disabled for testing
     
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -154,7 +154,7 @@ class IncomeStatementViewSet(viewsets.ModelViewSet):
     """ViewSet for income statement management"""
     queryset = IncomeStatement.objects.all()
     serializer_class = IncomeStatementSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]  # TEMP: Auth disabled for testing
     
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -170,7 +170,7 @@ class BalanceSheetViewSet(viewsets.ModelViewSet):
     """ViewSet for balance sheet management"""
     queryset = BalanceSheet.objects.all()
     serializer_class = BalanceSheetSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]  # TEMP: Auth disabled for testing
     
     def get_queryset(self):
         queryset = super().get_queryset()

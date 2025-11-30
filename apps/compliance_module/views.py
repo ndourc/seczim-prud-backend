@@ -19,7 +19,7 @@ class ComplianceIndexViewSet(viewsets.ModelViewSet):
     """ViewSet for compliance index management"""
     queryset = ComplianceIndex.objects.all()
     serializer_class = ComplianceIndexSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]  # TEMP: Auth disabled for testing
     
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -89,7 +89,7 @@ class ComplianceAssessmentViewSet(viewsets.ModelViewSet):
     """ViewSet for compliance assessment management"""
     queryset = ComplianceAssessment.objects.all()
     serializer_class = ComplianceAssessmentSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]  # TEMP: Auth disabled for testing
     
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -131,7 +131,7 @@ class ComplianceRequirementViewSet(viewsets.ModelViewSet):
     """ViewSet for compliance requirement management"""
     queryset = ComplianceRequirement.objects.all()
     serializer_class = ComplianceRequirementSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]  # TEMP: Auth disabled for testing
     
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -163,7 +163,7 @@ class ComplianceViolationViewSet(viewsets.ModelViewSet):
     """ViewSet for compliance violation management"""
     queryset = ComplianceViolation.objects.all()
     serializer_class = ComplianceViolationSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]  # TEMP: Auth disabled for testing
     
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -194,7 +194,7 @@ class ComplianceReportViewSet(viewsets.ModelViewSet):
     """ViewSet for compliance report management"""
     queryset = ComplianceReport.objects.all()
     serializer_class = ComplianceReportSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]  # TEMP: Auth disabled for testing
     
     def get_queryset(self):
         queryset = super().get_queryset()

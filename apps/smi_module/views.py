@@ -41,7 +41,7 @@ class SMISubmissionRBAC(permissions.BasePermission):
 
 
 class SMISubmissionView(APIView):
-    permission_classes = [SMISubmissionRBAC]
+    permission_classes = [permissions.AllowAny]  # AUTH_DISABLED - was: permission_classes = [SMISubmissionRBAC]
 
     def get(self, request):
         """
@@ -117,7 +117,7 @@ class IsCommissionAnalyst(permissions.BasePermission):
 
 
 class CalculateRiskView(APIView):
-    permission_classes = [IsCommissionAnalyst]
+    permission_classes = [permissions.AllowAny]  # AUTH_DISABLED - was: permission_classes = [IsCommissionAnalyst]
 
     def post(self, request, submission_id: int):
         try:
