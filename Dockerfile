@@ -27,8 +27,8 @@ RUN pip install --upgrade pip && \
 # Copy project files
 COPY . .
 
-# Create directories for static files
-RUN mkdir -p staticfiles media
+# Create directories for static files and logs
+RUN mkdir -p staticfiles media logs
 
 # Collect static files
 RUN python manage.py collectstatic --noinput || echo "Static files collection failed, continuing..."
@@ -40,12 +40,22 @@ EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
     CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/admin/').read()" || exit 1
 
-# Run with environment variable PORT
-CMD gunicorn config.wsgi:application \
-    --bind 0.0.0.0:8080 \
-    --workers 2 \
-    --threads 4 \
-    --timeout 120 \
-    --access-logfile - \
-    --error-logfile - \
-    --log-level debug
+# Create startup script that runs migrations before starting server
+RUN echo '#!/bin/bash\n\
+    set -e\n\
+    echo "Running database migrations..."\n\
+    python manage.py migrate --noinput\n\
+    echo "Migrations complete!"\n\
+    echo "Starting Gunicorn..."\n\
+    exec gunicorn config.wsgi:application \\\n\
+    --bind 0.0.0.0:8080 \\\n\
+    --workers 3 \\\n\
+    --threads 4 \\\n\
+    --timeout 120 \\\n\
+    --access-logfile - \\\n\
+    --error-logfile - \\\n\
+    --log-level info\n\
+    ' > /app/start.sh && chmod +x /app/start.sh
+
+# Run startup script
+CMD ["/app/start.sh"]
