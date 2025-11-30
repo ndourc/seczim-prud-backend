@@ -58,4 +58,5 @@ RUN echo '#!/bin/bash\n\
     ' > /app/start.sh && chmod +x /app/start.sh
 
 # Run startup script
-CMD ["/app/start.sh"]
+CMD python manage.py migrate && \
+    gunicorn config.wsgi:application --bind 0.0.0.0:8080 --workers 3
