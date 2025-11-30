@@ -1,3 +1,9 @@
+databases:
+  - name: prudential-db
+    plan: starter
+    databaseName: prudential
+    user: prudential_user
+
 services:
   - type: web
     name: prudential-backend
@@ -16,3 +22,7 @@ services:
         value: config.settings
       - key: PYTHON_VERSION
         value: 3.11.0
+      - key: DATABASE_URL
+        fromDatabase:
+          name: prudential-db
+          property: connectionString
