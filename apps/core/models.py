@@ -300,6 +300,201 @@ class SystemAuditLog(models.Model):
     change_message = models.TextField(default='Change message to be provided')
     timestamp = models.DateTimeField(default=timezone.now)
     ip_address = models.GenericIPAddressField(null=True, blank=True)
+# Income Statement
+total_revenue = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+total_expenses = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+profit_before_tax = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+net_profit = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+
+# Balance Sheet
+total_assets = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+total_liabilities = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+total_equity = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+
+# Ratios
+gross_margin = models.FloatField(null=True, blank=True)
+profit_margin = models.FloatField(null=True, blank=True)
+debt_to_equity = models.FloatField(null=True, blank=True)
+
+file_upload = models.FileField(upload_to='financial_statements/', null=True, blank=True)
+created_at = models.DateTimeField(default=timezone.now)
+updated_at = models.DateTimeField(auto_now=True)
+
+def __str__(self):
+    return f"{self.statement_type} - {self.smi.company_name} - {self.period}"
+
+class Meta:
+    unique_together = ['smi', 'period', 'statement_type']
+
+class ClientAssetMix(models.Model):
+    """Clients' asset mix and net capital position"""
+    smi = models.ForeignKey(SMI, on_delete=models.CASCADE, related_name='client_asset_mixes')
+    period = models.DateField(default=timezone.now)
+    asset_class = models.CharField(max_length=100, choices=[
+        ('EQUITIES', 'Equities'),
+        ('FIXED_INCOME', 'Fixed Income'),
+        ('ALTERNATIVES', 'Alternatives'),
+        ('CASH', 'Cash & Equivalents'),
+        ('REAL_ESTATE', 'Real Estate'),
+        ('COMMODITIES', 'Commodities')
+    ], default='EQUITIES')
+    allocation_percentage = models.DecimalField(max_digits=5, decimal_places=2,
+                                             validators=[MinValueValidator(0), MaxValueValidator(100)], default=0)
+    market_value = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    net_capital_position = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    sec_compliance_status = models.CharField(max_length=20, choices=[
+        ('COMPLIANT', 'Compliant'),
+        ('NON_COMPLIANT', 'Non-Compliant'),
+        ('UNDER_REVIEW', 'Under Review')
+    ], default='COMPLIANT')
+    created_at = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f"{self.asset_class} - {self.smi.company_name} - {self.period}"
+
+
+
+class LicensingBreach(models.Model):
+    """Licensing breaches, cancellations, and suspensions"""
+    BREACH_TYPES = [
+        ('MINOR', 'Minor Breach'),
+        ('MAJOR', 'Major Breach'),
+        ('CRITICAL', 'Critical Breach'),
+        ('CANCELLATION', 'License Cancellation'),
+        ('SUSPENSION', 'License Suspension')
+    ]
+    
+    STATUS_CHOICES = [
+        ('OPEN', 'Open'),
+        ('INVESTIGATING', 'Investigating'),
+        ('RESOLVED', 'Resolved'),
+        ('ESCALATED', 'Escalated'),
+        ('CLOSED', 'Closed')
+    ]
+    
+    smi = models.ForeignKey(SMI, on_delete=models.CASCADE, related_name='licensing_breaches')
+    breach_type = models.CharField(max_length=20, choices=BREACH_TYPES, default='MINOR')
+    breach_date = models.DateField(default=timezone.now)
+    description = models.TextField(default='Breach description to be provided')
+    regulatory_reference = models.CharField(max_length=255, help_text="Regulatory provision violated", default='Regulatory reference to be specified')
+    
+    # Investigation
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='OPEN')
+    assigned_to = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    investigation_notes = models.TextField(blank=True)
+    
+    # Resolution
+    resolution_date = models.DateField(null=True, blank=True)
+    resolution_action = models.TextField(blank=True)
+    penalty_amount = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.breach_type} - {self.smi.company_name} - {self.breach_date}"
+
+class SupervisoryIntervention(models.Model):
+    """Log of supervisory interventions"""
+    INTERVENTION_TYPES = [
+        ('WARNING', 'Warning Letter'),
+        ('FINE', 'Monetary Fine'),
+        ('SUSPENSION', 'Temporary Suspension'),
+        ('RESTRICTION', 'Business Restriction'),
+        ('REQUIREMENT', 'Additional Requirements'),
+        ('ENHANCED_MONITORING', 'Enhanced Monitoring')
+    ]
+    
+    smi = models.ForeignKey(SMI, on_delete=models.CASCADE, related_name='supervisory_interventions')
+    intervention_type = models.CharField(max_length=30, choices=INTERVENTION_TYPES, default='WARNING')
+    intervention_date = models.DateField(default=timezone.now)
+    reason = models.TextField(default='Intervention reason to be specified')
+    description = models.TextField(default='Intervention description to be provided')
+    
+    # Intensity and Frequency
+    intensity = models.CharField(max_length=20, choices=[
+        ('LOW', 'Low'),
+        ('MEDIUM', 'Medium'),
+        ('HIGH', 'High'),
+        ('CRITICAL', 'Critical')
+    ], default='MEDIUM')
+    frequency = models.CharField(max_length=20, choices=[
+        ('ONE_TIME', 'One Time'),
+        ('RECURRING', 'Recurring'),
+        ('CONTINUOUS', 'Continuous')
+    ], default='ONE_TIME')
+    
+    # Follow-up
+    follow_up_required = models.BooleanField(default=False)
+    follow_up_date = models.DateField(null=True, blank=True)
+    outcome = models.TextField(blank=True)
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.intervention_type} - {self.smi.company_name} - {self.intervention_date}"
+
+
+
+class Notification(models.Model):
+    """System notifications and alerts"""
+    NOTIFICATION_TYPES = [
+        ('LICENSING_UPDATE', 'Licensing Portal Update'),
+        ('MARKET_SUBMISSION', 'Market Submission'),
+        ('TRAINING_VIDEO', 'New Training Video'),
+        ('MATERIAL_UPLOAD', 'New Material Uploaded'),
+        ('RISK_THRESHOLD', 'Risk Threshold Alert'),
+        ('MANAGEMENT_CHANGE', 'Management Change Alert'),
+        ('BUSINESS_ACTIVITY', 'Business Activity Change'),
+        ('INSPECTION_DUE', 'Inspection Due'),
+        ('COMPLIANCE_DEADLINE', 'Compliance Deadline'),
+        ('BREACH_ALERT', 'Breach Alert')
+    ]
+    
+    PRIORITY_CHOICES = [
+        ('LOW', 'Low'),
+        ('MEDIUM', 'Medium'),
+        ('HIGH', 'High'),
+        ('URGENT', 'Urgent')
+    ]
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
+    notification_type = models.CharField(max_length=30, choices=NOTIFICATION_TYPES, default='MARKET_SUBMISSION')
+    title = models.CharField(max_length=255, default='Notification title')
+    message = models.TextField(default='Notification message')
+    priority = models.CharField(max_length=20, choices=PRIORITY_CHOICES, default='MEDIUM')
+    
+    # Content and Links
+    content_link = models.URLField(blank=True, null=True)
+    related_entity_type = models.CharField(max_length=50, blank=True)
+    related_entity_id = models.UUIDField(null=True, blank=True)
+    
+    # Status
+    read = models.BooleanField(default=False)
+    read_at = models.DateTimeField(null=True, blank=True)
+    
+    # Delivery
+    email_sent = models.BooleanField(default=False)
+    email_sent_at = models.DateTimeField(null=True, blank=True)
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.notification_type} - {self.user.username} - {self.created_at.strftime('%Y-%m-%d')}"
+
+    class Meta:
+        ordering = ['-created_at']
+
+class SystemAuditLog(models.Model):
+    """Audit trail for all system activities"""
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    action = models.CharField(max_length=100, default='Unknown action')
+    model_name = models.CharField(max_length=100, default='Unknown model')
+    object_id = models.CharField(max_length=100, default='Unknown ID')
+    object_repr = models.CharField(max_length=255, default='Unknown object')
+    change_message = models.TextField(default='Change message to be provided')
+    timestamp = models.DateTimeField(default=timezone.now)
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
     user_agent = models.TextField(blank=True)
 
     def __str__(self):
@@ -307,3 +502,79 @@ class SystemAuditLog(models.Model):
 
     class Meta:
         ordering = ['-timestamp']
+
+class Committee(models.Model):
+    """Board Committees"""
+    smi = models.ForeignKey(SMI, on_delete=models.CASCADE, related_name='committees')
+    name = models.CharField(max_length=255)
+    purpose = models.TextField()
+    chairperson = models.CharField(max_length=255)
+    members = models.JSONField(default=list, help_text="List of member names")
+    meetings_held = models.IntegerField(default=0)
+    meeting_frequency = models.CharField(max_length=100)
+    created_at = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f"{self.name} - {self.smi.company_name}"
+
+class IncomeItem(models.Model):
+    """Detailed income items for Financial Statement"""
+    financial_statement = models.ForeignKey(FinancialStatement, on_delete=models.CASCADE, related_name='income_items')
+    category = models.CharField(max_length=255)
+    description = models.CharField(max_length=255)
+    amount = models.DecimalField(max_digits=15, decimal_places=2)
+    is_core = models.BooleanField(default=True)
+
+class Asset(models.Model):
+    """Assets for Balance Sheet"""
+    financial_statement = models.ForeignKey(FinancialStatement, on_delete=models.CASCADE, related_name='assets')
+    asset_type = models.CharField(max_length=255)
+    category = models.CharField(max_length=255)
+    value = models.DecimalField(max_digits=15, decimal_places=2)
+    is_current = models.BooleanField(default=True)
+    acquisition_date = models.DateField(null=True, blank=True)
+
+class Liability(models.Model):
+    """Liabilities for Balance Sheet"""
+    financial_statement = models.ForeignKey(FinancialStatement, on_delete=models.CASCADE, related_name='liabilities')
+    liability_type = models.CharField(max_length=255)
+    category = models.CharField(max_length=255)
+    value = models.DecimalField(max_digits=15, decimal_places=2)
+    is_current = models.BooleanField(default=True)
+    due_date = models.DateField(null=True, blank=True)
+
+class Debtor(models.Model):
+    """Debtors for Balance Sheet"""
+    financial_statement = models.ForeignKey(FinancialStatement, on_delete=models.CASCADE, related_name='debtors')
+    name = models.CharField(max_length=255)
+    amount = models.DecimalField(max_digits=15, decimal_places=2)
+    age_days = models.IntegerField()
+
+class Creditor(models.Model):
+    """Creditors for Balance Sheet"""
+    financial_statement = models.ForeignKey(FinancialStatement, on_delete=models.CASCADE, related_name='creditors')
+    name = models.CharField(max_length=255)
+    amount = models.DecimalField(max_digits=15, decimal_places=2)
+    due_date = models.DateField()
+
+class RelatedParty(models.Model):
+    """Related Party Transactions"""
+    financial_statement = models.ForeignKey(FinancialStatement, on_delete=models.CASCADE, related_name='related_parties')
+    name = models.CharField(max_length=255)
+    relationship = models.CharField(max_length=255)
+    balance = models.DecimalField(max_digits=15, decimal_places=2)
+    transaction_type = models.CharField(max_length=20, choices=[('receivable', 'Receivable'), ('payable', 'Payable')])
+
+class CapitalPosition(models.Model):
+    """Capital Position Calculation"""
+    smi = models.ForeignKey(SMI, on_delete=models.CASCADE, related_name='capital_positions')
+    calculation_date = models.DateField()
+    net_capital = models.DecimalField(max_digits=15, decimal_places=2)
+    required_capital = models.DecimalField(max_digits=15, decimal_places=2)
+    adjusted_liquid_capital = models.DecimalField(max_digits=15, decimal_places=2)
+    is_compliant = models.BooleanField(default=True)
+    capital_adequacy_ratio = models.FloatField()
+    created_at = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f"Capital Position - {self.smi.company_name} - {self.calculation_date}"

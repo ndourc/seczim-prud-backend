@@ -17,7 +17,7 @@ from .serializers import (
     ClienteleProfileSerializer, FinancialStatementSerializer, ClientAssetMixSerializer,
     LicensingBreachSerializer, SupervisoryInterventionSerializer,
     NotificationSerializer, SystemAuditLogSerializer, SMIDetailSerializer,
-    SMIDashboardSerializer
+    SMIDashboardSerializer, OffsiteProfilingSerializer
 )
 from apps.auth_module.permissions import (
     IsAdminUser, IsPrincipalOfficer, IsAccountant, IsComplianceOfficer,
@@ -230,3 +230,16 @@ class SystemAuditLogViewSet(viewsets.ReadOnlyModelViewSet):
     search_fields = ['action', 'model_name', 'object_repr', 'user__username']
     ordering_fields = ['timestamp']
     ordering = ['-timestamp']
+
+class OffsiteProfilingViewSet(viewsets.ViewSet):
+    """
+    ViewSet for handling Offsite Profiling submissions
+    """
+    permission_classes = [permissions.AllowAny]
+
+    def create(self, request):
+        serializer = OffsiteProfilingSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'status': 'success', 'message': 'Offsite profiling data submitted successfully'}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

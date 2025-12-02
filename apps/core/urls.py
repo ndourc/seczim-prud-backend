@@ -4,7 +4,7 @@ from .views import (
     SMIViewSet, BoardMemberViewSet, MeetingLogViewSet, ProductOfferingViewSet,
     ClienteleProfileViewSet, FinancialStatementViewSet, ClientAssetMixViewSet,
     LicensingBreachViewSet, SupervisoryInterventionViewSet,
-    NotificationViewSet, SystemAuditLogViewSet
+    NotificationViewSet, SystemAuditLogViewSet, OffsiteProfilingViewSet
 )
 
 router = DefaultRouter()
@@ -21,6 +21,7 @@ router.register(r'supervisory-interventions', SupervisoryInterventionViewSet)
 
 router.register(r'notifications', NotificationViewSet)
 router.register(r'audit-logs', SystemAuditLogViewSet)
+router.register(r'offsite-profiling', OffsiteProfilingViewSet, basename='offsite-profiling')
 
 urlpatterns = [
     path('', include(router.urls)),
