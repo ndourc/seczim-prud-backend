@@ -72,7 +72,7 @@ class CaseNote(models.Model):
     """Progress notes and updates for cases"""
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     case = models.ForeignKey(Case, on_delete=models.CASCADE, related_name='case_notes')
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     note = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -172,7 +172,7 @@ class CaseAttachment(models.Model):
     file_name = models.CharField(max_length=255)
     file_type = models.CharField(max_length=20, choices=ATTACHMENT_TYPES, default='DOCUMENT')
     description = models.TextField(blank=True)
-    uploaded_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    uploaded_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

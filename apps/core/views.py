@@ -46,9 +46,8 @@ class SMIViewSet(viewsets.ModelViewSet):
         return SMISerializer
 
     def get_permissions(self):
-        if self.action in ['create', 'update', 'partial_update', 'destroy']:
-            return [permissions.IsAuthenticated(), CanEditSmiData()]
-        return super().get_permissions()
+        # TESTING MODE: allow all requests for any action
+        return [permissions.AllowAny()]
 
     @action(detail=False, methods=['get'])
     def dashboard(self, request):
@@ -105,9 +104,8 @@ class BoardMemberViewSet(viewsets.ModelViewSet):
     search_fields = ['name', 'position', 'smi__company_name']
 
     def get_permissions(self):
-        if self.action in ['create', 'update', 'partial_update', 'destroy']:
-            return [permissions.IsAuthenticated(), CanEditSmiData()]
-        return super().get_permissions()
+        # TESTING MODE: allow all requests for any action
+        return [permissions.AllowAny()]
 
 class MeetingLogViewSet(viewsets.ModelViewSet):
     queryset = MeetingLog.objects.all()
@@ -117,9 +115,8 @@ class MeetingLogViewSet(viewsets.ModelViewSet):
     search_fields = ['smi__company_name', 'agenda', 'decisions']
 
     def get_permissions(self):
-        if self.action in ['create', 'update', 'partial_update', 'destroy']:
-            return [permissions.IsAuthenticated(), CanEditSmiData()]
-        return super().get_permissions()
+        # TESTING MODE: allow all requests for any action
+        return [permissions.AllowAny()]
 
 class ProductOfferingViewSet(viewsets.ModelViewSet):
     queryset = ProductOffering.objects.all()
@@ -129,9 +126,8 @@ class ProductOfferingViewSet(viewsets.ModelViewSet):
     search_fields = ['product_name', 'smi__company_name']
 
     def get_permissions(self):
-        if self.action in ['create', 'update', 'partial_update', 'destroy']:
-            return [permissions.IsAuthenticated(), CanEditSmiData()]
-        return super().get_permissions()
+        # TESTING MODE: allow all requests for any action
+        return [permissions.AllowAny()]
 
 class ClienteleProfileViewSet(viewsets.ModelViewSet):
     queryset = ClienteleProfile.objects.all()
@@ -141,9 +137,8 @@ class ClienteleProfileViewSet(viewsets.ModelViewSet):
     search_fields = ['smi__company_name']
 
     def get_permissions(self):
-        if self.action in ['create', 'update', 'partial_update', 'destroy']:
-            return [permissions.IsAuthenticated(), CanEditSmiData()]
-        return super().get_permissions()
+        # TESTING MODE: allow all requests for any action
+        return [permissions.AllowAny()]
 
 class FinancialStatementViewSet(viewsets.ModelViewSet):
     queryset = FinancialStatement.objects.all()
@@ -153,9 +148,8 @@ class FinancialStatementViewSet(viewsets.ModelViewSet):
     search_fields = ['smi__company_name']
 
     def get_permissions(self):
-        if self.action in ['create', 'update', 'partial_update', 'destroy']:
-            return [permissions.IsAuthenticated(), CanEditSmiData()]
-        return super().get_permissions()
+        # TESTING MODE: allow all requests for any action
+        return [permissions.AllowAny()]
 
 class ClientAssetMixViewSet(viewsets.ModelViewSet):
     queryset = ClientAssetMix.objects.all()
@@ -179,9 +173,8 @@ class LicensingBreachViewSet(viewsets.ModelViewSet):
     ordering = ['-breach_date']
 
     def get_permissions(self):
-        if self.action in ['create', 'update', 'partial_update', 'destroy']:
-            return [permissions.IsAuthenticated(), CanCreateReports()]
-        return super().get_permissions()
+        # TESTING MODE: allow all requests for any action
+        return [permissions.AllowAny()]
 
 class SupervisoryInterventionViewSet(viewsets.ModelViewSet):
     queryset = SupervisoryIntervention.objects.all()
@@ -193,9 +186,8 @@ class SupervisoryInterventionViewSet(viewsets.ModelViewSet):
     ordering = ['-intervention_date']
 
     def get_permissions(self):
-        if self.action in ['create', 'update', 'partial_update', 'destroy']:
-            return [permissions.IsAuthenticated(), CanCreateReports()]
-        return super().get_permissions()
+        # TESTING MODE: allow all requests for any action
+        return [permissions.AllowAny()]
 
 class NotificationViewSet(viewsets.ModelViewSet):
     queryset = Notification.objects.all()
@@ -211,6 +203,8 @@ class NotificationViewSet(viewsets.ModelViewSet):
         if getattr(self, 'swagger_fake_view', False):
             return Notification.objects.none()
         
+        if self.request.user.is_anonymous:
+            return Notification.objects.all()
         return Notification.objects.filter(user=self.request.user)
 
     @action(detail=True, methods=['post'])

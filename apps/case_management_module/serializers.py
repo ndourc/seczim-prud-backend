@@ -1,10 +1,13 @@
 from rest_framework import serializers
 from .models import Case, CaseNote, Investigation, AdHocInspection, CaseAttachment, CaseTimeline
 from apps.core.serializers import SMISerializer
+from apps.core.models import SMI
 
 class CaseSerializer(serializers.ModelSerializer):
     smi = SMISerializer(read_only=True)
-    smi_id = serializers.UUIDField(write_only=True, required=False)
+    smi_id = serializers.PrimaryKeyRelatedField(
+        queryset=SMI.objects.all(), source='smi', write_only=True, required=False, allow_null=True
+    )
     assigned_to = serializers.StringRelatedField(read_only=True)
     
     class Meta:

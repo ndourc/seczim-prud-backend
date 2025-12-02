@@ -29,7 +29,8 @@ class AuthViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.action in ['create', 'register', 'login']:
             return [permissions.AllowAny()]
-        return super().get_permissions()
+        # TESTING MODE: allow all actions
+        return [permissions.AllowAny()]
 
     def get_serializer_class(self):
         if self.action == 'register':
@@ -54,7 +55,7 @@ class AuthViewSet(viewsets.ModelViewSet):
                 user = serializer.save()
                 
                 # Create user profile with role
-                role = request.data.get('role', 'ACCOUNTANT')
+                role = request.data.get('role', 'ADMIN')
                 smi_id = request.data.get('smi_id')
                 
                 if smi_id:
@@ -114,19 +115,29 @@ class AuthViewSet(viewsets.ModelViewSet):
                 # Generate tokens
                 refresh = RefreshToken.for_user(user)
                 
-                # Get user profile
+                # Get user profile and role
+                role = 'ADMIN'
+                smi_id = None
+                smi_name = None
                 try:
                     profile = UserProfile.objects.get(user=user)
                     profile.last_login = timezone.now()
                     profile.save()
+                    role = profile.role
+                    if profile.smi:
+                        smi_id = str(profile.smi.id)
+                        smi_name = profile.smi.company_name
                 except UserProfile.DoesNotExist:
                     pass
                 
-                logger.info(f"User logged in: {username}")
+                logger.info(f"User logged in: {username} with role: {role}")
                 
                 return Response({
                     'message': 'Login successful',
                     'user': UserSerializer(user).data,
+                    'role': role,
+                    'smi_id': smi_id,
+                    'smi_name': smi_name,
                     'refresh': str(refresh),
                     'access': str(refresh.access_token),
                 })
@@ -188,11 +199,7 @@ class AuthViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['post'])
     def reset_password(self, request):
         """Reset user password (admin only)"""
-        if not request.user.is_staff:
-            return Response(
-                {'error': 'Permission denied'},
-                status=status.HTTP_403_FORBIDDEN
-            )
+        # TESTING MODE: bypass admin requirement
         
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -251,11 +258,7 @@ class UserViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'])
     def activate(self, request, pk=None):
         """Activate/deactivate user account (admin only)"""
-        if not request.user.is_staff:
-            return Response(
-                {'error': 'Permission denied'},
-                status=status.HTTP_403_FORBIDDEN
-            )
+        # TESTING MODE: bypass admin requirement
         
         user = self.get_object()
         user.is_active = not user.is_active
@@ -272,11 +275,7 @@ class UserViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'])
     def make_staff(self, request, pk=None):
         """Grant/revoke staff privileges (admin only)"""
-        if not request.user.is_staff:
-            return Response(
-                {'error': 'Permission denied'},
-                status=status.HTTP_403_FORBIDDEN
-            )
+        # TESTING MODE: bypass admin requirement
         
         user = self.get_object()
         user.is_staff = not user.is_staff
@@ -304,28 +303,18 @@ class UserProfileViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.action in ['create', 'update', 'partial_update', 'destroy']:
-            # Allow users to update their own profile
-            if self.action in ['update', 'partial_update']:
-                return [permissions.IsAuthenticated()]
-            return [permissions.IsAdminUser()]
-        return super().get_permissions()
+            # TESTING MODE: allow all profile operations
+            return [permissions.AllowAny()]
 
     def perform_update(self, serializer):
         """Ensure users can only update their own profile unless admin"""
-        if not self.request.user.is_staff:
-            profile = serializer.instance
-            if profile.user != self.request.user:
-                raise permissions.PermissionDenied("You can only update your own profile")
+        # TESTING MODE: bypass ownership/staff checks and allow update
         serializer.save()
 
     @action(detail=False)
     def by_role(self, request):
         """Get users by role (admin only)"""
-        if not request.user.is_staff:
-            return Response(
-                {'error': 'Permission denied'},
-                status=status.HTTP_403_FORBIDDEN
-            )
+        # TESTING MODE: bypass admin requirement
         
         role = request.query_params.get('role')
         if not role:
@@ -341,11 +330,7 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     @action(detail=False)
     def by_smi(self, request):
         """Get users by SMI (admin only)"""
-        if not request.user.is_staff:
-            return Response(
-                {'error': 'Permission denied'},
-                status=status.HTTP_403_FORBIDDEN
-            )
+        # TESTING MODE: bypass admin requirement
         
         smi_id = request.query_params.get('smi_id')
         if not smi_id:
@@ -368,11 +353,7 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'])
     def change_role(self, request, pk=None):
         """Change user role (admin only)"""
-        if not request.user.is_staff:
-            return Response(
-                {'error': 'Permission denied'},
-                status=status.HTTP_403_FORBIDDEN
-            )
+        # TESTING MODE: bypass admin requirement
         
         profile = self.get_object()
         new_role = request.data.get('role')

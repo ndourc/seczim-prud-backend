@@ -5,9 +5,9 @@ from .views import (
 )
 
 router = DefaultRouter()
-router.register(r'risk-assessments', RiskAssessmentViewSet, basename='risk-assessment')
+router.register(r'assessments', RiskAssessmentViewSet, basename='risk-assessment')
 router.register(r'stress-tests', StressTestViewSet)
-router.register(r'risk-indicators', RiskIndicatorViewSet, basename='risk-indicator')
+router.register(r'indicators', RiskIndicatorViewSet, basename='risk-indicator')
 router.register(r'trends', RiskTrendViewSet)
 
 urlpatterns = [

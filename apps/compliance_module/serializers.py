@@ -1,10 +1,13 @@
 from rest_framework import serializers
 from .models import ComplianceIndex, ComplianceAssessment, ComplianceRequirement, ComplianceViolation, ComplianceReport
 from apps.core.serializers import SMISerializer
+from apps.core.models import SMI
 
 class ComplianceIndexSerializer(serializers.ModelSerializer):
     smi = SMISerializer(read_only=True)
-    smi_id = serializers.UUIDField(write_only=True)
+    smi_id = serializers.PrimaryKeyRelatedField(
+        queryset=SMI.objects.all(), source='smi', write_only=True
+    )
     
     class Meta:
         model = ComplianceIndex
@@ -13,7 +16,9 @@ class ComplianceIndexSerializer(serializers.ModelSerializer):
 
 class ComplianceAssessmentSerializer(serializers.ModelSerializer):
     smi = SMISerializer(read_only=True)
-    smi_id = serializers.UUIDField(write_only=True)
+    smi_id = serializers.PrimaryKeyRelatedField(
+        queryset=SMI.objects.all(), source='smi', write_only=True
+    )
     
     class Meta:
         model = ComplianceAssessment
@@ -22,7 +27,9 @@ class ComplianceAssessmentSerializer(serializers.ModelSerializer):
 
 class ComplianceRequirementSerializer(serializers.ModelSerializer):
     smi = SMISerializer(read_only=True)
-    smi_id = serializers.UUIDField(write_only=True)
+    smi_id = serializers.PrimaryKeyRelatedField(
+        queryset=SMI.objects.all(), source='smi', write_only=True
+    )
     
     class Meta:
         model = ComplianceRequirement
@@ -31,7 +38,9 @@ class ComplianceRequirementSerializer(serializers.ModelSerializer):
 
 class ComplianceViolationSerializer(serializers.ModelSerializer):
     smi = SMISerializer(read_only=True)
-    smi_id = serializers.UUIDField(write_only=True)
+    smi_id = serializers.PrimaryKeyRelatedField(
+        queryset=SMI.objects.all(), source='smi', write_only=True
+    )
     compliance_requirement = serializers.PrimaryKeyRelatedField(queryset=ComplianceRequirement.objects.all())
     
     class Meta:
@@ -41,7 +50,9 @@ class ComplianceViolationSerializer(serializers.ModelSerializer):
 
 class ComplianceReportSerializer(serializers.ModelSerializer):
     smi = SMISerializer(read_only=True)
-    smi_id = serializers.UUIDField(write_only=True)
+    smi_id = serializers.PrimaryKeyRelatedField(
+        queryset=SMI.objects.all(), source='smi', write_only=True
+    )
     prepared_by = serializers.StringRelatedField(read_only=True)
     
     class Meta:

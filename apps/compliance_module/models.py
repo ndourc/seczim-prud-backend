@@ -38,11 +38,59 @@ class ComplianceIndex(models.Model):
         unique_together = ['smi', 'period', 'analysis_period']
         ordering = ['-period']
 
+    # PRBS Formula Inputs
+    total_responses = models.IntegerField(default=0, help_text="R: Total number of Responses")
+    total_yes = models.IntegerField(default=0, help_text="Y: Total number of Yes answers")
+    total_no = models.IntegerField(default=0, help_text="N: Total number of No answers")
+    total_blank = models.IntegerField(default=0, help_text="B: Total number of Blank answers")
+    
+    # Weights (Configurable defaults)
+    positive_weight = models.FloatField(default=1.0, help_text="Pi: Positive weight")
+    negative_weight = models.FloatField(default=1.0, help_text="Bi: Negative weight")
+
     def calculate_final_compliance_score(self):
         """Calculate final compliance score with post-inspection adjustments"""
+        # If PRBS inputs are present, use the formula
+        if self.total_responses > 0:
+            self.overall_compliance_score = self.calculate_ci_prbs()
+            
         self.final_compliance_score = self.overall_compliance_score + self.post_inspection_adjustment
         self.final_compliance_score = max(0, min(100, self.final_compliance_score))  # Ensure within 0-100 range
         return self.final_compliance_score
+
+    def calculate_ci_prbs(self):
+        """
+        Calculate Compliance Level Index (CI_PRBS) using the formula:
+        CI = (Sum((Y * 0.5Pi - N * Bi)) / R) + 99
+        
+        Note: The formula in requirements adds 99%. Assuming the result is a percentage 0-100.
+        The formula structure implies a baseline score adjusted by responses.
+        """
+        R = self.total_responses
+        Y = self.total_yes
+        N = self.total_no
+        Pi = self.positive_weight
+        Bi = self.negative_weight
+        
+        if R == 0:
+            return 0.0
+            
+        # Formula: ( (Y * 0.5 * Pi) - (N * Bi) ) / R
+        # The requirements say "+ 99%". If the raw calculation is a small number, adding 99 might make it ~100.
+        # Let's implement exactly as described:
+        # numerator = (Y * 0.5 * Pi) - (N * Bi)
+        # result = (numerator / R) + 99
+        
+        numerator = (Y * 0.5 * Pi) - (N * Bi)
+        score = (numerator / R) * 100 # Scaling factor assumption? 
+        # Wait, the formula says "+ 99%". 
+        # If Y=10, N=0, R=10, Pi=1 -> (5 - 0)/10 = 0.5. + 99 = 99.5.
+        # If Y=0, N=10, R=10, Bi=1 -> (0 - 10)/10 = -1. + 99 = 98.
+        # This seems to keep scores very high. 
+        # Let's stick to the literal interpretation: (numerator / R) + 99
+        
+        raw_score = (numerator / R) + 99
+        return max(0, min(100, raw_score))
 
 class ComplianceAssessment(models.Model):
     """Comprehensive compliance assessment"""

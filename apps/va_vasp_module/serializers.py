@@ -1,10 +1,13 @@
 from rest_framework import serializers
 from .models import VA_VASP, VirtualAsset, VASPService, VARiskAssessment, VASPCompliance
 from apps.core.serializers import SMISerializer
+from apps.core.models import SMI
 
 class VA_VASPSerializer(serializers.ModelSerializer):
     smi = SMISerializer(read_only=True)
-    smi_id = serializers.UUIDField(write_only=True)
+    smi_id = serializers.PrimaryKeyRelatedField(
+        queryset=SMI.objects.all(), source='smi', write_only=True
+    )
     
     class Meta:
         model = VA_VASP

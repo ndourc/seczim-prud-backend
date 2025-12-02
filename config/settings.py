@@ -14,6 +14,11 @@ SECRET_KEY = 'django-insecure-=t@!my--1g01_j&4vukik2_e*c+-zwx&y^bzoqf-#+)hr7at=5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
+# Testing toggle: when True (or env var AUTH_BYPASS='True') the app will
+# inject a privileged dev user into every request so authorization checks
+# are effectively bypassed. STRICTLY for local/testing only.
+AUTH_BYPASS = os.environ.get('AUTH_BYPASS', 'False') == 'True'
+
 ALLOWED_HOSTS = ['*']
 
 # CORS settings
@@ -53,6 +58,8 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    # Force auth bypass middleware (testing only). Controlled via AUTH_BYPASS env var.
+    'config.force_auth_middleware.ForceAuthMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -134,13 +141,13 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # REST Framework settings
-# AUTH DISABLED FOR PRODUCTION - All endpoints are now public
+# TESTING MODE: All authenticated users have equal administrative power
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
+    # TESTING MODE: disable authentication classes so all requests are treated as unauthenticated
+    # and not rejected due to invalid/missing tokens. This makes authorization non-blocking.
+    'DEFAULT_AUTHENTICATION_CLASSES': (),
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',  # Changed from IsAuthenticated
+            'rest_framework.permissions.AllowAny',  # TESTING MODE: Allow all requests
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 20,

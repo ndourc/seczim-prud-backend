@@ -2,54 +2,81 @@ from rest_framework import permissions
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 
+class IsAuthenticatedUser(permissions.BasePermission):
+    """
+    TESTING MODE: Allow all authenticated users with equal administrative power.
+    """
+    def has_permission(self, request, view):
+        return bool(request.user and request.user.is_authenticated)
+
+
 class IsAdminUser(permissions.BasePermission):
     """
     Allow access only to admin users.
+    TESTING MODE: All authenticated users have equal administrative power
     """
     def has_permission(self, request, view):
-        return bool(request.user and request.user.is_staff)
+        # For testing: allow all authenticated users
+        return bool(request.user and request.user.is_authenticated)
+        # Production: uncomment below
+        # return bool(request.user and request.user.is_staff)
 
 class IsPrincipalOfficer(permissions.BasePermission):
     """
     Allow access only to Principal Officers.
+    TESTING MODE: All authenticated users can access
     """
     def has_permission(self, request, view):
         if not request.user.is_authenticated:
             return False
         
-        try:
-            profile = request.user.userprofile
-            return profile.role == 'PRINCIPAL_OFFICER'
-        except:
-            return False
+        # For testing: all authenticated users have equal power
+        return True
+        
+        # Production code (commented out):
+        # try:
+        #     profile = request.user.userprofile
+        #     return profile.role == 'PRINCIPAL_OFFICER'
+        # except:
+        #     return False
 
 class IsAccountant(permissions.BasePermission):
     """
     Allow access only to Accountants.
+    TESTING MODE: All authenticated users can access
     """
     def has_permission(self, request, view):
         if not request.user.is_authenticated:
             return False
         
-        try:
-            profile = request.user.userprofile
-            return profile.role == 'ACCOUNTANT'
-        except:
-            return False
+        # For testing: all authenticated users have equal power
+        return True
+        
+        # Production code (commented out):
+        # try:
+        #     profile = request.user.userprofile
+        #     return profile.role == 'ACCOUNTANT'
+        # except:
+        #     return False
 
 class IsComplianceOfficer(permissions.BasePermission):
     """
     Allow access only to Compliance Officers.
+    TESTING MODE: All authenticated users can access
     """
     def has_permission(self, request, view):
         if not request.user.is_authenticated:
             return False
         
-        try:
-            profile = request.user.userprofile
-            return profile.role == 'COMPLIANCE_OFFICER'
-        except:
-            return False
+        # For testing: all authenticated users have equal power
+        return True
+        
+        # Production code (commented out):
+        # try:
+        #     profile = request.user.userprofile
+        #     return profile.role == 'COMPLIANCE_OFFICER'
+        # except:
+        #     return False
 
 class CanViewSmiData(permissions.BasePermission):
     """
@@ -84,8 +111,8 @@ class CanEditSmiData(permissions.BasePermission):
         
         try:
             profile = request.user.userprofile
-            # Only Accountants and Compliance Officers can edit SMI data
-            return profile.role in ['ADMIN', 'ACCOUNTANT', 'COMPLIANCE_OFFICER']
+            # All roles can edit SMI data for testing
+            return profile.role in ['ADMIN', 'PRINCIPAL_OFFICER', 'ACCOUNTANT', 'COMPLIANCE_OFFICER']
         except:
             return False
 
@@ -122,8 +149,8 @@ class CanCreateReports(permissions.BasePermission):
         
         try:
             profile = request.user.userprofile
-            # Only Compliance Officers and Accountants can create reports
-            return profile.role in ['ADMIN', 'ACCOUNTANT', 'COMPLIANCE_OFFICER']
+            # All roles can create reports for testing
+            return profile.role in ['ADMIN', 'PRINCIPAL_OFFICER', 'ACCOUNTANT', 'COMPLIANCE_OFFICER']
         except:
             return False
 
@@ -141,8 +168,8 @@ class CanManageCases(permissions.BasePermission):
         
         try:
             profile = request.user.userprofile
-            # Only Compliance Officers can manage cases
-            return profile.role in ['ADMIN', 'COMPLIANCE_OFFICER']
+            # All roles can manage cases for testing
+            return profile.role in ['ADMIN', 'PRINCIPAL_OFFICER', 'ACCOUNTANT', 'COMPLIANCE_OFFICER']
         except:
             return False
 
@@ -179,8 +206,8 @@ class CanCreateRiskAssessments(permissions.BasePermission):
         
         try:
             profile = request.user.userprofile
-            # Only Compliance Officers can create risk assessments
-            return profile.role in ['ADMIN', 'COMPLIANCE_OFFICER']
+            # All roles can create risk assessments for testing
+            return profile.role in ['ADMIN', 'PRINCIPAL_OFFICER', 'ACCOUNTANT', 'COMPLIANCE_OFFICER']
         except:
             return False
 
@@ -217,8 +244,8 @@ class CanEditFinancialData(permissions.BasePermission):
         
         try:
             profile = request.user.userprofile
-            # Only Accountants can edit financial data
-            return profile.role in ['ADMIN', 'ACCOUNTANT']
+            # All roles can edit financial data for testing
+            return profile.role in ['ADMIN', 'PRINCIPAL_OFFICER', 'ACCOUNTANT', 'COMPLIANCE_OFFICER']
         except:
             return False
 
@@ -255,8 +282,8 @@ class CanCreateInspectionReports(permissions.BasePermission):
         
         try:
             profile = request.user.userprofile
-            # Only Compliance Officers can create inspection reports
-            return profile.role in ['ADMIN', 'COMPLIANCE_OFFICER']
+            # All roles can create inspection reports for testing
+            return profile.role in ['ADMIN', 'PRINCIPAL_OFFICER', 'ACCOUNTANT', 'COMPLIANCE_OFFICER']
         except:
             return False
 
