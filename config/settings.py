@@ -20,6 +20,7 @@ DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 AUTH_BYPASS = os.environ.get('AUTH_BYPASS', 'False') == 'True'
 
 ALLOWED_HOSTS = ['*']
+ALLOWED_ORIGINS = ['*']
 
 # CORS settings
 CORS_ALLOW_ALL_ORIGINS = True  # Only for development
