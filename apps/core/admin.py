@@ -7,6 +7,7 @@ from .models import (
     FinancialStatement, ClientAssetMix, LicensingBreach, SupervisoryIntervention,
     Notification, SystemAuditLog
 )
+from .formula_models import CalculationFormula, CalculationBreakdown
 
 @admin.register(SMI)
 class SMIAdmin(admin.ModelAdmin):
@@ -106,3 +107,43 @@ class SystemAuditLogAdmin(admin.ModelAdmin):
     search_fields = ['user__username', 'action', 'model_name', 'object_repr']
     readonly_fields = ['timestamp']
     list_per_page = 25
+
+@admin.register(CalculationFormula)
+class CalculationFormulaAdmin(admin.ModelAdmin):
+    list_display = ['formula_type', 'name', 'version', 'is_active', 'updated_by', 'updated_at']
+    list_filter = ['formula_type', 'is_active', 'created_at', 'updated_at']
+    search_fields = ['name', 'description', 'formula_type']
+    readonly_fields = ['id', 'created_at', 'updated_at', 'version']
+    list_per_page = 25
+    
+    fieldsets = (
+        ('Basic Information', {
+            'fields': ('formula_type', 'name', 'description', 'is_active')
+        }),
+        ('Formula Definition', {
+            'fields': ('formula_expression', 'variables', 'weights', 'thresholds')
+        }),
+        ('Metadata', {
+            'fields': ('version', 'created_by', 'updated_by', 'change_notes', 'id', 'created_at', 'updated_at')
+        }),
+    )
+
+@admin.register(CalculationBreakdown)
+class CalculationBreakdownAdmin(admin.ModelAdmin):
+    list_display = ['calculation_type', 'reference_id', 'final_value', 'final_percentage', 'calculated_at']
+    list_filter = ['calculation_type', 'calculated_at']
+    search_fields = ['calculation_type', 'reference_id', 'calculated_by']
+    readonly_fields = ['id', 'calculated_at']
+    list_per_page = 25
+    
+    fieldsets = (
+        ('Calculation Info', {
+            'fields': ('calculation_type', 'reference_id', 'formula')
+        }),
+        ('Results', {
+            'fields': ('final_value', 'final_percentage', 'components')
+        }),
+        ('Metadata', {
+            'fields': ('calculated_at', 'calculated_by', 'id')
+        }),
+    )

@@ -245,6 +245,9 @@ def calculate_fsi_score(financial_statement):
     """
     Calculate Financial Stability Index score
     """
+    from .formula_models import CalculationBreakdown
+    from decimal import Decimal
+    
     try:
         # Simple scoring based on profitability and margins
         if financial_statement.profit_margin and financial_statement.profit_margin > 0:
@@ -257,23 +260,101 @@ def calculate_fsi_score(financial_statement):
         else:
             margin_score = 0
         
-        # Weighted average
-        fsi_score = (profit_score * 0.6) + (margin_score * 0.4)
-        return max(0, min(100, fsi_score))
+        # Weights
+        profit_weight = 0.6
+        margin_weight = 0.4
         
-    except Exception:
+        # Calculate contributions
+        profit_contribution = profit_score * profit_weight
+        margin_contribution = margin_score * margin_weight
+        
+        # Weighted average
+        fsi_score = profit_contribution + margin_contribution
+        fsi_score = max(0, min(100, fsi_score))
+        
+        # Save calculation breakdown
+        components = [
+            {
+                "name": "Profit Margin",
+                "value": float(financial_statement.profit_margin) if financial_statement.profit_margin else 0,
+                "weight": profit_weight,
+                "score": profit_score,
+                "contribution": profit_contribution,
+                "impact_percentage": (profit_contribution / fsi_score * 100) if fsi_score > 0 else 0,
+                "description": "Company's profit margin ratio"
+            },
+            {
+                "name": "Gross Margin",
+                "value": float(financial_statement.gross_margin) if financial_statement.gross_margin else 0,
+                "weight": margin_weight,
+                "score": margin_score,
+                "contribution": margin_contribution,
+                "impact_percentage": (margin_contribution / fsi_score * 100) if fsi_score > 0 else 0,
+                "description": "Company's gross margin ratio"
+            }
+        ]
+        
+        # Create breakdown record
+        CalculationBreakdown.objects.create(
+            calculation_type='FSI_SCORE',
+            reference_id=financial_statement.smi.id,
+            final_value=Decimal(str(fsi_score)),
+            final_percentage=Decimal(str(fsi_score)),
+            components=components,
+            calculated_by='system'
+        )
+        
+        return fsi_score
+        
+    except Exception as e:
+        logger.error(f"Error calculating FSI score: {str(e)}")
         return 50  # Default score
 
 def calculate_car(financial_statement):
     """
     Calculate Capital Adequacy Ratio
     """
+    from .formula_models import CalculationBreakdown
+    from decimal import Decimal
+    
     try:
         if financial_statement.total_equity and financial_statement.total_assets:
             car = (financial_statement.total_equity / financial_statement.total_assets) * 100
-            return max(0, min(100, car))
+            car = max(0, min(100, car))
+            
+            # Save calculation breakdown
+            components = [
+                {
+                    "name": "Total Equity",
+                    "value": float(financial_statement.total_equity),
+                    "weight": 1.0,
+                    "contribution": float(financial_statement.total_equity),
+                    "impact_percentage": 100.0,
+                    "description": "Company's total equity"
+                },
+                {
+                    "name": "Total Assets",
+                    "value": float(financial_statement.total_assets),
+                    "weight": 1.0,
+                    "contribution": float(financial_statement.total_assets),
+                    "impact_percentage": 0.0,
+                    "description": "Company's total assets (denominator)"
+                }
+            ]
+            
+            CalculationBreakdown.objects.create(
+                calculation_type='CAR',
+                reference_id=financial_statement.smi.id,
+                final_value=Decimal(str(car)),
+                final_percentage=Decimal(str(car)),
+                components=components,
+                calculated_by='system'
+            )
+            
+            return car
         return 50  # Default ratio
-    except Exception:
+    except Exception as e:
+        logger.error(f"Error calculating CAR: {str(e)}")
         return 50
 
 def determine_risk_level(fsi_score, car):

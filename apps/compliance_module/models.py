@@ -8,7 +8,7 @@ class ComplianceIndex(models.Model):
     """Compliance index and entity-level risk calibration"""
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     smi = models.ForeignKey(SMI, on_delete=models.CASCADE, related_name='compliance_indices')
-    period = models.DateField(default=timezone.now)
+    period = models.DateField(default=timezone.localdate)
     analysis_period = models.CharField(max_length=20, choices=[
         ('QUARTERLY', 'Quarterly'),
         ('ANNUAL', 'Annual')
@@ -111,7 +111,7 @@ class ComplianceAssessment(models.Model):
     
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     smi = models.ForeignKey(SMI, on_delete=models.CASCADE, related_name='compliance_assessments')
-    assessment_date = models.DateField(default=timezone.now)
+    assessment_date = models.DateField(default=timezone.localdate)
     assessment_type = models.CharField(max_length=30, choices=ASSESSMENT_TYPES, default='REGULAR')
     
     # Assessment Details
@@ -183,7 +183,7 @@ class ComplianceRequirement(models.Model):
     last_assessment_date = models.DateField(null=True, blank=True)
     
     # Timeline
-    effective_date = models.DateField(default=timezone.now)
+    effective_date = models.DateField(default=timezone.localdate)
     due_date = models.DateField(null=True, blank=True)
     compliance_date = models.DateField(null=True, blank=True)
     
@@ -231,7 +231,7 @@ class ComplianceViolation(models.Model):
     violation_type = models.CharField(max_length=20, choices=VIOLATION_TYPES, default='MINOR')
     severity = models.CharField(max_length=20, choices=SEVERITY_LEVELS, default='MEDIUM')
     description = models.TextField()
-    date_identified = models.DateField(default=timezone.now)
+    date_identified = models.DateField(default=timezone.localdate)
     
     # Investigation
     investigation_status = models.CharField(max_length=20, choices=[
@@ -281,7 +281,7 @@ class ComplianceReport(models.Model):
     title = models.CharField(max_length=255)
     period_start = models.DateField()
     period_end = models.DateField()
-    report_date = models.DateField(default=timezone.now)
+    report_date = models.DateField(default=timezone.localdate)
     
     # Content
     executive_summary = models.TextField()

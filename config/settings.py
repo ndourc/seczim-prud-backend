@@ -146,7 +146,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
     # TESTING MODE: disable authentication classes so all requests are treated as unauthenticated
     # and not rejected due to invalid/missing tokens. This makes authorization non-blocking.
-    'DEFAULT_AUTHENTICATION_CLASSES': (),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
     'DEFAULT_PERMISSION_CLASSES': [
             'rest_framework.permissions.AllowAny',  # TESTING MODE: Allow all requests
     ],

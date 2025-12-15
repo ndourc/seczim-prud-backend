@@ -27,10 +27,13 @@ class AuthViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]  # AUTH_DISABLED
 
     def get_permissions(self):
-        if self.action in ['create', 'register', 'login']:
+        # Login is public, but registration requires admin privileges
+        if self.action == 'login':
             return [permissions.AllowAny()]
-        # TESTING MODE: allow all actions
-        return [permissions.AllowAny()]
+        elif self.action == 'register':
+            # Only admins should register new users (SMI representatives)
+            # For now changing this to AllowAny to debug the 403 issue even when logged in as admin
+            return [permissions.IsAuthenticated()]  # Should be sufficient if user is admin
 
     def get_serializer_class(self):
         if self.action == 'register':

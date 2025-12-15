@@ -6,6 +6,7 @@ from .views import (
     LicensingBreachViewSet, SupervisoryInterventionViewSet,
     NotificationViewSet, SystemAuditLogViewSet, OffsiteProfilingViewSet
 )
+from .formula_views import CalculationFormulaViewSet, CalculationBreakdownViewSet
 
 router = DefaultRouter()
 router.register(r'smis', SMIViewSet)
@@ -22,6 +23,10 @@ router.register(r'supervisory-interventions', SupervisoryInterventionViewSet)
 router.register(r'notifications', NotificationViewSet)
 router.register(r'audit-logs', SystemAuditLogViewSet)
 router.register(r'offsite-profiling', OffsiteProfilingViewSet, basename='offsite-profiling')
+
+# Formula management endpoints
+router.register(r'calculation-formulae', CalculationFormulaViewSet, basename='calculation-formula')
+router.register(r'calculation-breakdowns', CalculationBreakdownViewSet, basename='calculation-breakdown')
 
 urlpatterns = [
     path('', include(router.urls)),
